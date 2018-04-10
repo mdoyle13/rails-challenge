@@ -1,0 +1,21 @@
+<h1>Experts</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Expert</th>
+            <th>Short Url</th>
+            <th>Friend Count</th>
+            <th></th>
+    </thead>
+    <tbody>
+    	<% @experts.each do |expert| %>
+    		<tr>
+                <td><%= expert.name %></td>
+                <td><%= link_to expert.short_url, expert.short_url, target: "_blank" %></td>
+                <td>count</td>
+                <td><%= link_to "View Expert", expert_path(expert) %></td>
+            </tr>
+    	<% end %>
+    </tbody>
+</table>
