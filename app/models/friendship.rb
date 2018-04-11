@@ -26,6 +26,6 @@ class Friendship < ApplicationRecord
   end
   
   def bi_directional_attributes
-    { expert_id: friend_id, friend_id: expert_id }    
+    { expert: friend, friend: expert }
   end
 end
