@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_11_004205) do
+ActiveRecord::Schema.define(version: 2018_04_11_172413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2018_04_11_004205) do
     t.integer "friend_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["expert_id"], name: "index_friendships_on_expert_id"
   end
 
   create_table "headlines", force: :cascade do |t|
@@ -36,6 +37,7 @@ ActiveRecord::Schema.define(version: 2018_04_11_004205) do
     t.text "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["expert_id"], name: "index_headlines_on_expert_id"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
