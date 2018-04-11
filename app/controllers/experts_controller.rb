@@ -4,7 +4,7 @@ class ExpertsController < ApplicationController
   end
   
   def show
-    @expert = Expert.includes(:headlines).find(params[:id])
+    @expert = Expert.where(id: params[:id]).first
   end
   
   def new

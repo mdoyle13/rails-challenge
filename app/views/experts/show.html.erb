@@ -1,7 +1,21 @@
-<h1><%=@expert.name%></h1>
+<h1><%= @expert.name %></h1>
 
 <ul>
 <% @expert.headlines.each do |h| %>
     <li><%= h.text %></li>
 <% end %>
 </ul>
+
+<h2>Friends</h2>
+<ul>
+<% @expert.friends.each do |exp| %>
+    <li><%= exp.name %></li>
+<% end %>
+</ul>
+
+<h3>Add a new friendship for <%= @expert.name %></h3>
+<%= form_for Friendship.new, controller: "friendships#create"  do |f| %>
+    <%= f.collection_select(:friend_id, Expert.not_self_and_not_already_friends(@expert), :id, :name) %>
+    <%= f.hidden_field :expert_id, value: @expert.id %>
+    <%= f.submit %>
+<% end %>

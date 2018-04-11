@@ -12,8 +12,16 @@ class Expert < ApplicationRecord
   after_create :scrape_page
   after_save :shorten_url, if: :saved_change_to_url
   
+  def self.not_self_and_not_already_friends(expert_id)
+    # where not the expert in question, dont want to include the expert themselves in the results
+    results = Expert.where.not(id: expert_id)
+    # where there is not alread a friendship
+    results = results.where.not(id: Friendship.where(expert_id: expert_id).collect(&:friend_id))
+    results
+  end
   
-  private  
+  private
+  
   def shorten_url
     # Ideally I'd like to not do 2 sql updates/inserts but time is of the essence
     bitly = Bitly.client.shorten(url)
