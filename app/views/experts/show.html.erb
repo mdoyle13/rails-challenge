@@ -1,4 +1,10 @@
 <h1><%= @expert.name %></h1>
+<dl>
+    <dt>url</dt>
+    <dd><%= link_to @expert.url, @expert.url %></dd>
+    <dt>short url</dt>
+    <dd><%= link_to @expert.short_url, @expert.short_url %></dd>
+</dl>
 <hr>
 <div class="row">
     <div class="col">
@@ -11,24 +17,7 @@
     </div>
     <div class="col">
         <h2>Friends</h2>
-        <ul>
-        <% @friendships.each do |friendship| %>
-            <li>
-                <%= friendship.friend.name %> | 
-                <%= link_to 'unfriend', friendship_path(friendship), method: :delete, data: { confirm: 'Are you sure?' } %> |
-                <%= link_to 'view profile', expert_path(friendship.friend.id) %> 
-            </li>
-        <% end %>
-        </ul>
-        <h3>Add a new friendship for <%= @expert.name %></h3>
-        <%= form_for Friendship.new, controller: "friendships#create"  do |f| %>
-            <%= 
-                f.collection_select(:friend_id, 
-                Expert.not_self_and_not_already_friends(@expert, @friendships.collect(&:friend_id)), 
-                :id, :name, include_blank: true) 
-            %>
-            <%= f.hidden_field :expert_id, value: @expert.id %>
-            <%= f.submit %>
-        <% end %>
+        <%= link_to "manage friends", manage_friends_expert_path(@expert) %>
+        <%= render 'friend_list', { friendship: @friendship } %>
     </div>
 </div>

@@ -9,13 +9,33 @@ class Expert < ApplicationRecord
   after_create :scrape_page
   after_save :shorten_url, if: :saved_change_to_url
   
-  def self.not_self_and_not_already_friends(expert_id, friend_ids)
+  def self.get_friends_of_friends_ids(user_id)
+    #friend_ids - friends_of_friends_ids - user in question
+    friend_ids = self.get_experts_friend_ids(user_id)
+    
+    friends_of_friends_ids = []
+    
+    friend_ids.each do |id|
+      friends_of_friends_ids << self.get_experts_friend_ids(id)
+    end
+    
+    friends_of_friends_ids.flatten - friend_ids - [user_id]
+  end
+  
+  def self.get_experts_friend_ids(expert_id)
+    Friendship.where(expert_id: expert_id).pluck(:friend_id)
+  end
+  
+  def not_self_and_not_already_friends(friend_ids)
     # where not the expert in question, dont want to include the expert themselves in the results
-    results = Expert.where.not(id: expert_id)
+    results = Expert.where.not(id: self.id)
     # where there is not alread a friendship
     results = results.where.not(id: friend_ids)
-    #results = results.where.not(id: Friendship.where(expert_id: expert_id).collect(&:friend_id))
     results
+  end
+  
+  def mutual_friend_ids(other_expert_id)
+    Expert.get_experts_friend_ids(self.id) && Expert.get_experts_friend_ids(other_expert_id)
   end
   
   def with_friends

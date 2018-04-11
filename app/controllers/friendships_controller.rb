@@ -8,14 +8,15 @@ class FriendshipsController < ApplicationController
       flash[:error] = @friendship.errors.full_messages.to_sentence
     end
     
-    redirect_to expert_path(@friendship.expert)
+    redirect_back(fallback_location: expert_path(@friendship.expert))
   end
   
   def destroy
     @friendship = Friendship.find(params[:id])
     @friendship.destroy
     flash[:success] = "Successfully destroyed friendship"
-    redirect_to expert_path(@friendship.expert)
+
+    redirect_back(fallback_location: expert_path(@friendship.expert))
   end
   
   private

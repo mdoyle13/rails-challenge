@@ -1,0 +1,9 @@
+<ul>
+<% @friendships.each do |friendship| %>
+    <li>
+        <%= friendship.friend.name %> | 
+        <%= link_to 'unfriend', friendship_path(friendship), method: :delete, data: { confirm: 'Are you sure?' } %> |
+        <%= link_to 'view profile', expert_path(friendship.friend.id) %> 
+    </li>
+<% end %>
+</ul>

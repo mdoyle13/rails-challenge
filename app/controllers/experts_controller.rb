@@ -1,12 +1,12 @@
 class ExpertsController < ApplicationController
+  before_action :load_expert, only: [:show, :manage_friends]
+  
   def index
     @experts = Expert.all
   end
   
   def show
-    @expert = Expert.includes(:headlines).where(id: params[:id]).first
     @headlines = @expert.headlines
-    @friendships = @expert.with_friends
   end
   
   def new
@@ -23,6 +23,14 @@ class ExpertsController < ApplicationController
     end
   end
   
+  def manage_friends
+    @options_for_friend_selection = @expert.not_self_and_not_already_friends(@friendships.collect(&:friend_id))
+    
+    if params[:search]
+      experts_search
+    end
+  end
+  
   def update
   end
   
@@ -31,7 +39,35 @@ class ExpertsController < ApplicationController
   
   private
   
+  def load_expert
+    @expert = Expert.where(id: params[:id]).first
+    @friendships = @expert.with_friends
+  end
+  
   def expert_params
     params.require(:expert).permit(:name, :url)
   end
+  
+  def experts_search
+    @search = params[:search]
+    @headlines = Headline.includes(:expert).search_by_text_content(@search)
+    expert_ids = @headlines.collect(&:expert_id).uniq
+    
+    unless expert_ids.present?
+      @results = nil
+      return
+    end
+    
+    friend_of_friend_ids = Expert.get_friends_of_friends_ids(@expert.id)
+    
+    @results = Expert.where(id: expert_ids && friend_of_friend_ids)
+  end
+  
+  
+  
+  
+  
+  
+  
+  
 end

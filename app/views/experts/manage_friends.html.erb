@@ -1,0 +1,40 @@
+<h1>Managing Friends of <%= link_to @expert.name, expert_path(@expert) %></h1>
+<hr>
+<div class="row">
+    <div class="col">
+        <h2>Friends</h2>
+        <%= render 'friend_list', { friendship: @friendship } %>
+    </div>
+    <div class="col">
+        <h3>Search for experts to befriend</h3>
+            <%= form_tag({controller: "experts", action: "manage_friends"}, method: "get") do %>
+                <%= text_field_tag :search, @search, placeholder: "Enter a topic here" %>
+                <%= submit_tag("Search") %>
+            <% end %>
+        <% if @search.present? and !@results.present? %>
+            <p>Sorry there were no experts you have mutual friends on that topic</p>
+        <% end %>
+        
+        <% if @results.present? %>
+            <p>Experts on the topic of "<%= @search %>"</p>
+            <ul>
+                <% @results.each do |result| %>
+                    <li><%= link_to result.name, expert_path(result) %> through (<%= mutual_friend_list(@expert, @friendships, result) %>)</li>
+                <% end %>
+            </ul>
+        <% end %>
+        <br>
+        
+        <h3>Quick add a new friendship for <%= @expert.name %></h3>
+        <%= form_for Friendship.new, controller: "friendships#create"  do |f| %>
+            <%= 
+                f.collection_select(:friend_id, 
+                @options_for_friend_selection, 
+                :id, :name, include_blank: true) 
+            %>
+            <%= f.hidden_field :expert_id, value: @expert.id %>
+            <%= f.submit %>
+        <% end %>
+    </div>
+</div>
+
