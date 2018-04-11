@@ -25,8 +25,8 @@ class ExpertsController < ApplicationController
   
   def manage_friends
     @options_for_friend_selection = @expert.not_self_and_not_already_friends(@friendships.collect(&:friend_id))
-    
-    if params[:search]
+    @search = params[:search]
+    if @search
       experts_search
     end
   end
@@ -49,25 +49,19 @@ class ExpertsController < ApplicationController
   end
   
   def experts_search
-    @search = params[:search]
+    # grab the headlines using pg search
     @headlines = Headline.includes(:expert).search_by_text_content(@search)
+    
+    # stop here if there were no results
+    return unless @headlines.present?
+    
+    # collect the expert ids from the headlines
     expert_ids = @headlines.collect(&:expert_id).uniq
     
-    unless expert_ids.present?
-      @results = nil
-      return
-    end
-    
+    # collect friend of friend ids
     friend_of_friend_ids = Expert.get_friends_of_friends_ids(@expert.id)
     
+    # load experts of ids where expert ids and friend of friend ids intersect
     @results = Expert.where(id: expert_ids && friend_of_friend_ids)
   end
-  
-  
-  
-  
-  
-  
-  
-  
 end

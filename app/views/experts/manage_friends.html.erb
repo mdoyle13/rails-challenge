@@ -12,14 +12,21 @@
                 <%= submit_tag("Search") %>
             <% end %>
         <% if @search.present? and !@results.present? %>
-            <p>Sorry there were no experts you have mutual friends on that topic</p>
+            <p>Sorry there were no experts you have mutual friends with on that topic</p>
         <% end %>
         
         <% if @results.present? %>
+            <br>
             <p>Experts on the topic of "<%= @search %>"</p>
             <ul>
                 <% @results.each do |result| %>
-                    <li><%= link_to result.name, expert_path(result) %> through (<%= mutual_friend_list(@expert, @friendships, result) %>)</li>
+                    <li>
+                        <%= link_to result.name, expert_path(result) %> through 
+                        (<%= mutual_friend_list(@expert, @friendships, result) %>)
+                        <ul>
+                            <li><%= link_to "create friendship", {controller: 'friendships', action: 'create', friendship: {friend_id: result.id, expert_id: @expert.id}}, method: :post %></li>
+                        </ul>
+                    </li>
                 <% end %>
             </ul>
         <% end %>
