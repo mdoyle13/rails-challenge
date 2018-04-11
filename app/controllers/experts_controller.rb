@@ -4,7 +4,9 @@ class ExpertsController < ApplicationController
   end
   
   def show
-    @expert = Expert.where(id: params[:id]).first
+    @expert = Expert.includes(:headlines).where(id: params[:id]).first
+    @headlines = @expert.headlines
+    @friendships = @expert.with_friends
   end
   
   def new

@@ -11,7 +11,7 @@
     <tbody>
     	<% @experts.each do |expert| %>
     		<tr>
-                <td><%= expert.name %></td>
+                <td><%= link_to expert.name, expert_path(expert) %></td>
                 <td><%= link_to expert.short_url, expert.short_url, target: "_blank" %></td>
                 <td><%= expert.friend_count || 0 %></td>
                 <td><%= link_to "View Expert", expert_path(expert) %></td>

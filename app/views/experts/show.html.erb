@@ -4,7 +4,7 @@
     <div class="col">
         <h2>Headlines</h2>
         <ul>
-        <% @expert.headlines.each do |h| %>
+        <% @headlines.each do |h| %>
             <li><%= h.text %></li>
         <% end %>
         </ul>
@@ -12,7 +12,7 @@
     <div class="col">
         <h2>Friends</h2>
         <ul>
-        <% @expert.with_friends.each do |friendship| %>
+        <% @friendships.each do |friendship| %>
             <li>
                 <%= friendship.friend.name %> | 
                 <%= link_to 'unfriend', friendship_path(friendship), method: :delete, data: { confirm: 'Are you sure?' } %> |
@@ -22,7 +22,11 @@
         </ul>
         <h3>Add a new friendship for <%= @expert.name %></h3>
         <%= form_for Friendship.new, controller: "friendships#create"  do |f| %>
-            <%= f.collection_select(:friend_id, Expert.not_self_and_not_already_friends(@expert), :id, :name, include_blank: true) %>
+            <%= 
+                f.collection_select(:friend_id, 
+                Expert.not_self_and_not_already_friends(@expert, @friendships.collect(&:friend_id)), 
+                :id, :name, include_blank: true) 
+            %>
             <%= f.hidden_field :expert_id, value: @expert.id %>
             <%= f.submit %>
         <% end %>
