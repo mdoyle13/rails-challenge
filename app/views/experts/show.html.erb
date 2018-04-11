@@ -1,21 +1,30 @@
 <h1><%= @expert.name %></h1>
-
-<ul>
-<% @expert.headlines.each do |h| %>
-    <li><%= h.text %></li>
-<% end %>
-</ul>
-
-<h2>Friends</h2>
-<ul>
-<% @expert.friends.each do |exp| %>
-    <li><%= exp.name %></li>
-<% end %>
-</ul>
-
-<h3>Add a new friendship for <%= @expert.name %></h3>
-<%= form_for Friendship.new, controller: "friendships#create"  do |f| %>
-    <%= f.collection_select(:friend_id, Expert.not_self_and_not_already_friends(@expert), :id, :name) %>
-    <%= f.hidden_field :expert_id, value: @expert.id %>
-    <%= f.submit %>
-<% end %>
+<hr>
+<div class="row">
+    <div class="col">
+        <h2>Headlines</h2>
+        <ul>
+        <% @expert.headlines.each do |h| %>
+            <li><%= h.text %></li>
+        <% end %>
+        </ul>
+    </div>
+    <div class="col">
+        <h2>Friends</h2>
+        <ul>
+        <% @expert.with_friends.each do |friendship| %>
+            <li>
+                <%= friendship.friend.name %> | 
+                <%= link_to 'unfriend', friendship_path(friendship), method: :delete, data: { confirm: 'Are you sure?' } %> |
+                <%= link_to 'view profile', expert_path(friendship.friend.id) %> 
+            </li>
+        <% end %>
+        </ul>
+        <h3>Add a new friendship for <%= @expert.name %></h3>
+        <%= form_for Friendship.new, controller: "friendships#create"  do |f| %>
+            <%= f.collection_select(:friend_id, Expert.not_self_and_not_already_friends(@expert), :id, :name, include_blank: true) %>
+            <%= f.hidden_field :expert_id, value: @expert.id %>
+            <%= f.submit %>
+        <% end %>
+    </div>
+</div>

@@ -20,6 +20,10 @@ class Expert < ApplicationRecord
     results
   end
   
+  def with_friends
+    self.friendships.includes(:friend)
+  end
+  
   private
   
   def shorten_url
