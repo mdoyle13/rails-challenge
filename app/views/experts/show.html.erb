@@ -1,1 +1,7 @@
 <h1><%=@expert.name%></h1>
+
+<ul>
+<% @expert.headlines.each do |h| %>
+    <li><%= h.text %></li>
+<% end %>
+</ul>

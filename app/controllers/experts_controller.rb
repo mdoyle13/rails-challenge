@@ -4,7 +4,7 @@ class ExpertsController < ApplicationController
   end
   
   def show
-    @expert = Expert.find(params[:id])
+    @expert = Expert.includes(:headlines).find(params[:id])
   end
   
   def new
@@ -28,6 +28,7 @@ class ExpertsController < ApplicationController
   end
   
   private
+  
   def expert_params
     params.require(:expert).permit(:name, :url)
   end
