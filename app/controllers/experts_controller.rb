@@ -62,6 +62,6 @@ class ExpertsController < ApplicationController
     friend_of_friend_ids = Expert.get_friends_of_friends_ids(@expert.id)
     
     # load experts of ids where expert ids and friend of friend ids intersect
-    @results = Expert.where(id: expert_ids && friend_of_friend_ids)
+    @results = Expert.where(id: expert_ids & friend_of_friend_ids)
   end
 end
