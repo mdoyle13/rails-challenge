@@ -35,7 +35,7 @@ class Expert < ApplicationRecord
   end
   
   def mutual_friend_ids(other_expert_id)
-    Expert.get_experts_friend_ids(self.id) && Expert.get_experts_friend_ids(other_expert_id)
+    Expert.get_experts_friend_ids(self.id) & Expert.get_experts_friend_ids(other_expert_id)
   end
   
   def with_friends
