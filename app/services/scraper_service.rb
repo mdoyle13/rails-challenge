@@ -1,6 +1,3 @@
-require 'nokogiri'
-require 'open-uri'
-
 class ScraperService
   def initialize(url)
     @url = url
@@ -16,7 +13,6 @@ class ScraperService
   def scrape
     page = Nokogiri::HTML(open(@url))
     headlines = extract_headlines(page)
-    
     if headlines.present?
       @response.data = headlines
       @response.send("success?=", true)
@@ -39,7 +35,9 @@ class ScraperService
   end
   
   def fail!(message: )
-    @response.message = msg
+    @response.message = message
+    # if you don't explicitly return here, then the return value is just the message string, not the struct
+    # maybe a good candidate for yield_self or tap?
     return @response
   end
 end
