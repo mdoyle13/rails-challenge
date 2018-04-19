@@ -1,3 +1,5 @@
+require 'open-uri'
+
 class ScraperService
   def initialize(url)
     @url = url
